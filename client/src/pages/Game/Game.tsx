@@ -1,6 +1,5 @@
 import { Spin } from "antd";
 import { useEffect, useRef, useState } from "react";
-import { last as _last, range as _range } from "lodash";
 import { getNewDeck } from "../../api/cards-service";
 import { Card } from "../../types/cards";
 import { GameStatus } from "../../types/game";

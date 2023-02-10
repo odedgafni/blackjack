@@ -4,3 +4,8 @@ export interface Card {
     weight: number;
     color: string;
 }
+
+export const CardColor = {
+    RED: "red-color",
+    BLACK: "black-color"
+}
