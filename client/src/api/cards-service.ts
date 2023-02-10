@@ -11,8 +11,10 @@ interface GetNewDeckResponse {
 
 export const getNewDeck = async (): Promise<Card[]> => {
     try {
-        const { data } = await get<GetNewDeckResponse>(ENDPOINT);
-        const { deck } = data;
+        const {
+            data: { deck },
+        } = await get<GetNewDeckResponse>(ENDPOINT);
+
         return _shuffle(deck);
     } catch (error) {
         console.error("Failed to get new deck", error);

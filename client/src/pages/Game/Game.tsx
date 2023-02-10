@@ -66,10 +66,10 @@ const Game = (): JSX.Element => {
         };
     }, [dealerCards, gameStatus]);
 
-    // start the game - set inital data
+    // start the game - fetch deck & set inital data
     const init = async (userName?: string) => {
         setGameStatus(GameStatus.LOADING);
-        userName && setUsername((prev) => userName || prev);
+        userName && setUsername(userName);
 
         deck.current = await getNewDeck();
 
