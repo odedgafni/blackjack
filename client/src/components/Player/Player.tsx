@@ -1,3 +1,4 @@
+import classnames from "classnames";
 import classNames from "classnames";
 import { Card } from "../../types/cards";
 import { GameStatus } from "../../types/game";
@@ -37,7 +38,15 @@ const Player = ({ userName, cards, gameStatus, totalScore }: props) => {
                 ))}
             </div>
             <div className="player-name">
-                {userName || "The House"} : <b>{displayScore}</b>
+                {userName || "The House"}
+                <b
+                    className={classnames({
+                        "red-color": displayScore > 21,
+                        "green-color": displayScore === 21,
+                    })}
+                >
+                    : {displayScore}
+                </b>
             </div>
         </div>
     );

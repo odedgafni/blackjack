@@ -1,5 +1,7 @@
 import { shuffle as _shuffle } from "lodash";
-import { Card } from "../types/cards";
+import { Card, CardColor } from "../types/cards";
+
+const sleep = async (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 const getWeight = (value: string): number =>
     ["J", "Q", "K"].includes(value) ? 10 : value === "A" ? 11 : Number(value);
@@ -7,16 +9,22 @@ const getWeight = (value: string): number =>
 export const shuffleDeck = (deck: Card[]): Card[] => _shuffle(deck);
 
 export const getNewDeck = async (): Promise<Card[]> => {
-    const suits = ["♦️", "♥️", "♣️", "♠️"];
+    const suits = [
+        { suit: "♦️", color: CardColor.RED },
+        { suit: "♥️", color: CardColor.RED },
+        { suit: "♣️", color: CardColor.BLACK },
+        { suit: "♠️", color: CardColor.BLACK },
+    ];
     const values = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
 
-    const deck: Card[] = suits.flatMap((suit) =>
+    const deck: Card[] = suits.flatMap(({ suit, color }) =>
         values.map((value) => ({
             value,
+            color,
             suit,
             weight: getWeight(value),
         }))
     );
-    await new Promise(r => setTimeout(r, 300))
+    await sleep(300);
     return shuffleDeck(deck);
 };

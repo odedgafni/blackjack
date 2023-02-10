@@ -13,7 +13,7 @@ const Welcome = ({ init }: props): JSX.Element => {
 
     return (
         <div className="welcome-container">
-            <h1>Black Jack</h1>
+            <h1>Black <i className="red-color">Jack</i></h1>
             <Form className="form-container" onFinish={onSubmit}>
                 <div className="form-text">Please enter your name:</div>
                 <Form.Item name="username">

@@ -12,7 +12,9 @@ type props = {
 const GameCard = ({ card, isHidden = false, ...props }: props) => {
     return (
         <div className="card-container">
-            <div className="suit">{!isHidden ? card?.suit : ""}</div>
+            <div className={classNames("suit", { [card?.color || ""]: card?.color })}>
+                {!isHidden ? card?.suit : ""}
+            </div>
             <AntCard className={classNames("card", { hidden: isHidden })} {...props}>
                 <AntCard.Meta className="card-value" title={!isHidden ? card?.value : ""} />
             </AntCard>
