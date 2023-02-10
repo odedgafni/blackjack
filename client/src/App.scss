@@ -1,5 +1,7 @@
 $white: rgb(255, 255, 255);
 $pink-1: rgb(255, 200, 199);
+$red-1: rgb(180, 75, 75);
+$green-1: rgb(67, 169, 49);
 $grey-1: rgb(238, 238, 238);
 $grey-2: rgb(203, 203, 203);
 $black-1: rgb(65, 65, 65);
@@ -40,4 +42,11 @@ $black-2: rgb(17, 17, 17);
             border: 1px solid $black-1;
         }
     }
+}
+
+.spinner {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

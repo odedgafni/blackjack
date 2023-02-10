@@ -9,7 +9,7 @@ interface props {
     cardsLeft: number;
     hitMe: () => void;
     stay: () => void;
-    init: () => void;
+    init: (string?: string) => void;
 }
 
 const ActionBar = ({ gameStatus, hitMe, stay, init, cardsLeft, wins }: props) => {
@@ -18,17 +18,17 @@ const ActionBar = ({ gameStatus, hitMe, stay, init, cardsLeft, wins }: props) =>
         <div className="action-bar">
             {gameStatus === GameStatus.LOST ? (
                 <div className="lost-message">You Lost...</div>
-                ) : gameStatus === GameStatus.WON ? (
-                    <div className="won-message">You Won!</div>
-                    ) : (
-                        <>
+            ) : gameStatus === GameStatus.WON ? (
+                <div className="won-message">You Won!</div>
+            ) : (
+                <>
                     <Button
                         className="app-btn"
                         type="primary"
                         size="large"
                         disabled={disabled}
                         onClick={hitMe}
-                        >
+                    >
                         Hit Me!
                     </Button>
                     <Button
@@ -37,16 +37,16 @@ const ActionBar = ({ gameStatus, hitMe, stay, init, cardsLeft, wins }: props) =>
                         size="large"
                         disabled={disabled}
                         onClick={stay}
-                        >
+                    >
                         Stay
                     </Button>
                 </>
             )}
-            <Button className="app-btn" type="default" size="large" onClick={init}>
+            <Button className="app-btn" type="default" size="large" onClick={() => init()}>
                 Restart
             </Button>
-            <div className="deck-container">
-                <div className="deck">
+            <div className="deck">
+                <div>
                     <p className="text-info">Wins: {wins || 0}</p>
                     <GameCard isHidden />
                     <p className="text-info">Cards Left: {cardsLeft}</p>

@@ -1,5 +1,5 @@
 import { Spin } from "antd";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { last as _last, range as _range } from "lodash";
 import { getNewDeck } from "../../api/cards-service";
 import { Card } from "../../types/cards";
@@ -13,44 +13,53 @@ import "./Game.scss";
 const Game = (): JSX.Element => {
     const wins = useRef(0);
     const [userName, setUsername] = useState<string>("");
-    const [gameStatus, setGameStatus] = useState<GameStatus>(GameStatus.PLAYER_TURN);
+    const [gameStatus, setGameStatus] = useState<GameStatus>(GameStatus.LOADING);
     const [playerCards, setPlayerCards] = useState<Card[]>([]);
     const [dealerCards, setDealersCards] = useState<Card[]>([]);
-    const { deck, drawCards } = useDeck(getNewDeck());
+    const { deck, drawCards } = useDeck([]);
 
+    // recursive calculation of cards score -> if bigger than 21 change ace weight to 1
     const calculateWithAces = (score: number, aces: Card[]): number => {
-        if(!aces.length || score <= 21) return score;
-        if(score > 21) {
+        if (!aces.length || score <= 21) return score;
+        if (score > 21) {
             aces.pop();
             score -= 10;
         }
-        return calculateWithAces(score, aces)
-    }
+        return calculateWithAces(score, aces);
+    };
 
+    // sum cards weight
     const totalScore = (cards: Card[]) => {
         const score = cards.reduce((acc, curr) => acc + curr.weight, 0);
         const aces = cards.filter((card) => card.value === "A");
-        return calculateWithAces(score, aces)
+        return calculateWithAces(score, aces);
     };
 
-    useEffect(() => {
-        init();
-    }, []);
-
+    // triggeres each change in status or cards
     useEffect(() => {
         if (gameStatus !== GameStatus.DEALER_TURN) return;
 
+        // if dealer busted
         if (totalScore(dealerCards) > 21) {
-            wins.current += 1
+            wins.current += 1;
             setGameStatus(GameStatus.WON);
             return;
         }
+        // if dealer hand is higher
         if (totalScore(dealerCards) >= totalScore(playerCards)) {
             setGameStatus(GameStatus.LOST);
             return;
         }
+        // if dealer hand is not higher and cannot draw over 18 (is this correct?)
+        if (totalScore(dealerCards) > 17) {
+            wins.current += 1;
+            setGameStatus(GameStatus.WON);
+            return;
+        }
+        // keep drawing if player has higher hand and dealer is less than 18
         const timeOut = setTimeout(() => {
-            setDealersCards((prevCards) => [...prevCards, ...drawCards(1)]);
+            const cards = drawCards(1);
+            setDealersCards((prevCards) => [...prevCards, ...cards]);
         }, 1000);
 
         return () => {
@@ -58,8 +67,13 @@ const Game = (): JSX.Element => {
         };
     }, [dealerCards, gameStatus]);
 
-    const init = async () => {
-        deck.current = getNewDeck();
+    // start the game - set inital data
+    const init = async (userName?: string) => {
+        setGameStatus(GameStatus.LOADING);
+        userName && setUsername((prev) => userName || prev);
+
+        deck.current = await getNewDeck();
+
         setPlayerCards(drawCards(2));
         setDealersCards(drawCards(2));
         setGameStatus(GameStatus.PLAYER_TURN);
@@ -67,25 +81,17 @@ const Game = (): JSX.Element => {
 
     const hitMe = () => {
         const cards = drawCards(1);
-        setTimeout(() => {
-            setPlayerCards((prevCards) => [...prevCards, ...cards]);
-            if (totalScore([...playerCards, ...cards]) > 21) setGameStatus(GameStatus.LOST);
-        }, 100);
+        setPlayerCards((prevCards) => [...prevCards, ...cards]);
+        if (totalScore([...playerCards, ...cards]) > 21) setGameStatus(GameStatus.LOST);
     };
 
     const stay = () => {
         setGameStatus(GameStatus.DEALER_TURN);
-        if (totalScore(dealerCards) < totalScore(playerCards)) {
-            setTimeout(() => {
-                const cards = drawCards(1);
-                setDealersCards((prevCards) => [...prevCards, ...cards]);
-            }, 1000);
-        }
     };
 
-    if (!userName) return <Welcome setUsername={setUsername} />;
+    if (!userName) return <Welcome init={init} />;
 
-    if (!deck.current.length) return <Spin />;
+    if (gameStatus === GameStatus.LOADING) return <Spin className="spinner" size="large" />;
 
     return (
         <div className="game-container">

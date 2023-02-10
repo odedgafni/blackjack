@@ -6,19 +6,17 @@ const getWeight = (value: string): number =>
 
 export const shuffleDeck = (deck: Card[]): Card[] => _shuffle(deck);
 
-export const getNewDeck = (): Card[] => {
+export const getNewDeck = async (): Promise<Card[]> => {
     const suits = ["♦️", "♥️", "♣️", "♠️"];
     const values = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
 
     const deck: Card[] = suits.flatMap((suit) =>
-        values.map((value) => {
-            const weight = getWeight(value);
-            return {
-                value,
-                suit,
-                weight,
-            };
-        })
+        values.map((value) => ({
+            value,
+            suit,
+            weight: getWeight(value),
+        }))
     );
+    await new Promise(r => setTimeout(r, 300))
     return shuffleDeck(deck);
 };

@@ -23,3 +23,21 @@
         }
     }
 }
+
+@media only screen and (max-width: 600px) {
+    .welcome-container {
+        width: 100%;
+        .form-container {
+            border: none;
+            font-size: 24px;
+            .ant-form-item {
+                width: 80%;
+                margin: 10px auto;
+                text-align: center;
+                .ant-input {
+                    padding: 10px;
+                }
+            }
+        }
+    }
+}

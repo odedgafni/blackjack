@@ -1,5 +1,4 @@
-import { curry } from "lodash";
-import { getNewDeck } from "../../api/cards-service";
+import classNames from "classnames";
 import { Card } from "../../types/cards";
 import { GameStatus } from "../../types/game";
 import GameCard from "../Card/Card";
@@ -38,7 +37,7 @@ const Player = ({ userName, cards, gameStatus, totalScore }: props) => {
                 ))}
             </div>
             <div className="player-name">
-                {userName || "The House"} : {displayScore}
+                {userName || "The House"} : <b>{displayScore}</b>
             </div>
         </div>
     );
