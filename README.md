@@ -15,6 +15,8 @@ npm i
 npm start
 ```
 **Run Client:**
+
+In a new terminal:
 ```
 cd blackjack/client
 npm i
